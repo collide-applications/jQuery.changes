@@ -1,4 +1,5 @@
  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                                                            *
  * jQuery Changes Plugin                                                      *
  *                                                                            *
  * Check all changes on a HTML form and show message if the user tries to     *
@@ -28,7 +29,7 @@
  * On the success callback of the AJAX call the form should be reinitialized  *
  * with the values already saved.                                             *
  *                                                                            *
- * $.fn.changes.initialize();                                                 *
+ * jq.fn.changes( 'initialize' );                                             *
  *                                                                            *
  * Plugin parameters:                                                         *
  * - callback: function to be called before unload;                           *
@@ -39,12 +40,12 @@
  * Public parameters:                                                         *
  * - $.fn.changes.defaults: default values for plugin parameters;             *
  * - $.fn.changes.params: values for plugin parameters after initialization;  *
- *                                                                            *
- * Public methods:                                                            *
- * - $.fn.changes.initialize: create a snapshoot of a form values;            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function($){  // create closure
+    // keep all methods called from outside in this object
+    var methods = new Object();
+
     /**
      * Plug-in initialization
      *
@@ -52,27 +53,27 @@
      * @return  object this
      */
     $.fn.changes = function(){
-        // save current instance
-        $.fn.changes.instance = this;
-
         // check if first parameter is string (function name) and call it
         if( typeof( arguments[0] ) == 'string' ){
-            // check if function given and if it exists
-            if( $.isFunction( window[arguments[0]] ) ){
-                window[arguments[0]].call( $(this), ( arguments[1] || {} ) );
+            // check if function given and call it
+            if( $.isFunction( methods[arguments[0]] ) ){
+                methods[arguments[0]].call( this, ( arguments[1] || {} ) );
             }
 
             return false;
         }
 
+        // save current instance
+        $.fn.changes.instance = this;
+
         // merge default settings with dynamic settings
-        $.fn.changes.params = $.extend( $.fn.changes.defaults, ( arguments[0] || {} ) );
+        $.fn.changes.params = $.extend( $.fn.changes.defaults, ( arguments[0] || null ) );
 
         // bind onUnload event on window and pass "this" object
         _bindUnload.call( this );
 
         // take a snapshoot of all selected forms
-        return $.fn.changes.initialize();
+        return methods.initialize();
     };
 
     ////////////////////////////////// PUBLIC //////////////////////////////////
@@ -92,6 +93,8 @@
         excludeFields:  []          // fields to be excluded from check
     };
 
+    ///////////////////////////////// PRIVATE //////////////////////////////////
+
     /**
      * Remember initial values of all fields
      *
@@ -104,7 +107,7 @@
      * @access  public
      * @return  mixed   jQuery object on success or false on error
      */
-    $.fn.changes.initialize = function(){
+    methods.initialize = function(){
         // initialize fields only if plugin was already initialized
         if( typeof( $.fn.changes.instance ) === 'object' && $.fn.changes.instance != null ){
             return $.fn.changes.instance.
@@ -138,8 +141,6 @@
 
         return false;
     }
-
-    ///////////////////////////////// PRIVATE //////////////////////////////////
 
     /**
      * Bind onUnload event on window

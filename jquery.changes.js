@@ -8,6 +8,7 @@
  * @copyright           (c) Collide Applications 2011                         *
  * @author              Radu Graur                                            *
  * @email               radu.graur@gmail.com                                  *
+ * @link                https://github.com/collide-applications/jQuery.changes*
  *                                                                            *
  * Do not delete or modify this header!                                       *
  *                                                                            *

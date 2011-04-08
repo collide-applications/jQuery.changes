@@ -25,4 +25,4 @@ Check all changes on a HTML form and show message if the user tries to leave the
 - $.fn.changes.params: values for plugin parameters after initialization;
 
 ### Public methods:
-- $.fn.changes.setInitialValues: create a snapshoot of a form values;
+- $.fn.changes.initialize: create a snapshoot of a form values;

@@ -33,7 +33,7 @@
  * - $.fn.changes.params: values for plugin parameters after initialization;  *
  *                                                                            *
  * Public methods:                                                            *
- * - $.fn.changes.setInitialValues: create a snapshoot of a form values;      *
+ * - $.fn.changes.initialize: create a snapshoot of a form values;            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function($){  // create closure
@@ -44,6 +44,9 @@
      * @return  object this
      */
     $.fn.changes = function(){
+        // save current instance
+        $.fn.changes.instance = this;
+
         // check if first parameter is string (function name) and call it
         if( typeof( arguments[0] ) == 'string' ){
             // check if function given and if it exists
@@ -54,26 +57,21 @@
             return false;
         }
 
-        /**
-         * Merge default settings with dynamic settings
-         *
-         * @access private
-         */
+        // merge default settings with dynamic settings
         $.fn.changes.params = $.extend( $.fn.changes.defaults, ( arguments[0] || {} ) );
 
         // bind onUnload event on window and pass "this" object
         _bindUnload.call( this );
 
-        return this.each(function(){                        // for each element
-            $.fn.changes.setInitialValues.call( this );     // capture initial values
-        });
+        // take a snapshoot of all selected forms
+        return $.fn.changes.initialize();
     };
 
     ////////////////////////////////// PUBLIC //////////////////////////////////
 
     /**
      * Plugin default parameters
-     * 
+     *
      * Will be extended to $.fn.changes.params object
      *
      * @access public
@@ -91,35 +89,46 @@
      *
      * Store initial values in each element data on "old_val" variable.
      * For select lists keep options too.
+     * This function could be called from outside the closure for reset.
+     * If called from outside and the plugin is not initialized this function
+     * returns false.
      *
      * @access  public
-     * @return  void
+     * @return  mixed   jQuery object on success or false on error
      */
-    $.fn.changes.setInitialValues = function(){
-        // all textboxes, passwords and hidden inputs
-        $(':text, :password, [type=hidden], textarea', this).
-        each(function(){
-            $(this).
-            data('old_val', $(this).val()).
-            removeClass($.fn.changes.params.changedClass);
-        });
+    $.fn.changes.initialize = function(){
+        // initialize fields only if plugin was already initialized
+        if( typeof( $.fn.changes.instance ) === 'object' && $.fn.changes.instance != null ){
+            return $.fn.changes.instance.
+                each(function(){    // for each element of the original instance
+                    // all textboxes, passwords and hidden inputs
+                    $(':text, :password, [type=hidden], textarea', this).
+                    each(function(){
+                        $(this).
+                        data('old_val', $(this).val()).
+                        removeClass($.fn.changes.params.changedClass);
+                    });
 
-        // all checkboxes and radio buttons
-        $(':checkbox, :radio', this).
-        each(function(){
-            $(this).
-            data('old_val', $(this).attr('checked')).
-            removeClass($.fn.changes.params.changedClass);
-        });
+                    // all checkboxes and radio buttons
+                    $(':checkbox, :radio', this).
+                    each(function(){
+                        $(this).
+                        data('old_val', $(this).attr('checked')).
+                        removeClass($.fn.changes.params.changedClass);
+                    });
 
-        // all select lists
-        $('select', this).
-        each(function(){
-            $(this).
-            data('old_val', $(this).val()).
-            data('options', _serializeList.call( this )).
-            removeClass($.fn.changes.params.changedClass);
-        });
+                    // all select lists
+                    $('select', this).
+                    each(function(){
+                        $(this).
+                        data('old_val', $(this).val()).
+                        data('options', _serializeList.call( this )).
+                        removeClass($.fn.changes.params.changedClass);
+                    });
+                });
+        }
+
+        return false;
     }
 
     ///////////////////////////////// PRIVATE //////////////////////////////////
@@ -280,7 +289,7 @@
     function _serializeList(){
         var serialized = '';
         var $options = $(this).find('option');
-        
+
         // for each option
         $options.
         each(function(i){

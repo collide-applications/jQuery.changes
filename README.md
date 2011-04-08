@@ -20,7 +20,7 @@ This function could be used when the form is saved with AJAX.
 On the success callback of the AJAX call the form should be reinitialized
 with the values already saved.
 
-    $.fn.changes( 'initialize' );
+    $('#form_to_reset').changes( 'initialize' );
 
 ### Plugin parameters:
 - callback: function to be called before unload;

@@ -29,7 +29,7 @@
  * On the success callback of the AJAX call the form should be reinitialized  *
  * with the values already saved.                                             *
  *                                                                            *
- * jq.fn.changes( 'initialize' );                                             *
+ * $('#form_to_reset').changes( 'initialize' );                               *
  *                                                                            *
  * Plugin parameters:                                                         *
  * - callback: function to be called before unload;                           *
@@ -73,7 +73,7 @@
         _bindUnload.call( this );
 
         // take a snapshoot of all selected forms
-        return methods.initialize();
+        return methods.initialize.call( this );
     };
 
     ////////////////////////////////// PUBLIC //////////////////////////////////
@@ -110,7 +110,8 @@
     methods.initialize = function(){
         // initialize fields only if plugin was already initialized
         if( typeof( $.fn.changes.instance ) === 'object' && $.fn.changes.instance != null ){
-            return $.fn.changes.instance.
+            // only current object will be checked not all objects
+            return $(this).
                 each(function(){    // for each element of the original instance
                     // all textboxes, passwords and hidden inputs
                     $(':text, :password, [type=hidden], textarea', this).

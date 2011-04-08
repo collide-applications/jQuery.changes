@@ -5,14 +5,14 @@ Check all changes on a HTML form and show message if the user tries to leave the
 
 ### Plugin call example:
 
-    $(function(){
-	$('#selector').changes({
-	    callback:       myCallback,
-	    message:        'Any changes will be lost!',
-	    excludeTrigger: 'exclude',
-	    excludeFields:  ['.field1', '#field2', 'checkbox']
+	$(function(){
+		$('#selector').changes({
+			callback:       myCallback,
+			message:        'Any changes will be lost!',
+			excludeTrigger: 'exclude',
+			excludeFields:  ['.field1', '#field2', 'checkbox']
+		});
 	});
-    });
 
 ### Plugin parameters:
 - callback: function to be called before unload;

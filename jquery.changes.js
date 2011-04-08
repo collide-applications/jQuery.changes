@@ -4,22 +4,22 @@
  * Check all changes on a HTML form and show message if the user tries to     *
  * leave the page before saving.                                              *
  *                                                                            *
- * @version		1.0                                                           *
- * @copyright	(c) Radu Graur 2011                                           *
- * @author 		Radu Graur                                                    *
- * @email		radu.graur@gmail.com                                          *
+ * @version             1.0                                                   *
+ * @copyright           (c) Radu Graur 2011                                   *
+ * @author              Radu Graur                                            *
+ * @email               radu.graur@gmail.com                                  *
  *                                                                            *
  * Do not delete or modify this header!                                       *
  *                                                                            *
  * Plugin call example:                                                       *
  *                                                                            *
  * $(function(){                                                              *
- *		$('#selector').changes({                                              *
+ *     $('#selector').changes({                                               *
  *          callback:       myCallback,                                       *
  *          message:        'Any changes will be lost!',                      *
  *          excludeTrigger: 'exclude',                                        *
  *          excludeFields:  ['.field1', '#field2', 'checkbox']                *
- *		});                                                                   *
+ *     });                                                                    *
  * });                                                                        *
  *                                                                            *
  * Plugin parameters:                                                         *
@@ -36,14 +36,14 @@
  * - $.fn.changes.setInitialValues: create a snapshoot of a form values;      *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-(function($){	// create closure
-	/**
-	 * Plug-in initialization
+(function($){  // create closure
+    /**
+     * Plug-in initialization
      *
      * @access  public
-	 * @return 	object	this
-	 */
-	$.fn.changes = function(){
+     * @return  object this
+     */
+    $.fn.changes = function(){
         // check if first parameter is string (function name) and call it
         if( typeof( arguments[0] ) == 'string' ){
             // check if function given and if it exists
@@ -54,20 +54,20 @@
             return false;
         }
 
-		/**
+        /**
          * Merge default settings with dynamic settings
          *
          * @access private
          */
-		$.fn.changes.params = $.extend( $.fn.changes.defaults, ( arguments[0] || {} ) );
+        $.fn.changes.params = $.extend( $.fn.changes.defaults, ( arguments[0] || {} ) );
 
         // bind onUnload event on window and pass "this" object
         _bindUnload.call( this );
 
         return this.each(function(){                        // for each element
-			$.fn.changes.setInitialValues.call( this );     // capture initial values
-		});
-	};
+            $.fn.changes.setInitialValues.call( this );     // capture initial values
+        });
+    };
 
     ////////////////////////////////// PUBLIC //////////////////////////////////
 
@@ -85,19 +85,19 @@
         excludeTrigger: null,       // set a trigger class that will be excluded
         excludeFields:  []          // fields to be excluded from check
     };
-	
-	/**
-	 * Remember initial values of all fields
-	 *
+
+    /**
+     * Remember initial values of all fields
+     *
      * Store initial values in each element data on "old_val" variable.
      * For select lists keep options too.
-	 *
-	 * @access 	public
+     *
+     * @access  public
      * @return  void
-	 */
-	$.fn.changes.setInitialValues = function(){
+     */
+    $.fn.changes.setInitialValues = function(){
         // all textboxes, passwords and hidden inputs
-		$(':text, :password, [type=hidden], textarea', this).
+        $(':text, :password, [type=hidden], textarea', this).
         each(function(){
             $(this).
             data('old_val', $(this).val()).
@@ -120,18 +120,18 @@
             data('options', _serializeList.call( this )).
             removeClass($.fn.changes.params.changedClass);
         });
-	}
+    }
 
     ///////////////////////////////// PRIVATE //////////////////////////////////
 
     /**
-	 * Bind onUnload event on window
+     * Bind onUnload event on window
      *
      * !!!OBS: "this" object is plugins "this"
-	 *
-	 * @access 	private
+     *
+     * @access  private
      * @return  mixed   string if any changes were made or false
-	 */
+     */
     function _bindUnload(){
         // keep global this to pass it later to _isChanged function
         var globalThis = this;
@@ -157,13 +157,13 @@
     }
 
     /**
-	 * Check if any changes happened
+     * Check if any changes happened
      *
      * !!!OBS: "this" object is plugins "this"
-	 *
-	 * @access 	private
+     *
+     * @access  private
      * @return  boolean
-	 */
+     */
     function _isChanged( trigger ){
         // remember if any change was made
         var changed = false;
@@ -307,4 +307,4 @@
             $(this).addClass($.fn.changes.params.changedClass);
         }
     }
-})(jQuery);		// end closure
+})(jQuery);    // end closure

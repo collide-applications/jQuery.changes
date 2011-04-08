@@ -14,6 +14,14 @@ Check all changes on a HTML form and show message if the user tries to leave the
 		});
 	});
 
+### Reset forms:
+
+This function could be used when the form is saved with AJAX.
+On the success callback of the AJAX call the form should be reinitialized
+with the values already saved.
+
+    $.fn.changes.initialize();
+
 ### Plugin parameters:
 - callback: function to be called before unload;
 - message: custom message to show on page unload;

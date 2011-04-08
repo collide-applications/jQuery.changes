@@ -5,7 +5,7 @@
  * leave the page before saving.                                              *
  *                                                                            *
  * @version             1.0                                                   *
- * @copyright           (c) Radu Graur 2011                                   *
+ * @copyright           (c) Collide Applications 2011                         *
  * @author              Radu Graur                                            *
  * @email               radu.graur@gmail.com                                  *
  *                                                                            *
